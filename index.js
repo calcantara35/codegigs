@@ -14,6 +14,13 @@ db.authenticate()
 // init express
 const app = express();
 
+// express handlebars middleware | defaultLayout is main template name, see file structure
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+app.set('view engine', 'handlebars');
+
+// set static folder, public folder -> for linking css/static files /css/style.css, no need for public
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.get('/', (req, res) => {
   res.send('Index');
 });
