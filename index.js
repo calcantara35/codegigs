@@ -18,11 +18,15 @@ const app = express();
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
+// body parser for forms
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // set static folder, public folder -> for linking css/static files /css/style.css, no need for public
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Index route
 app.get('/', (req, res) => {
-  res.send('Index');
+  res.render('index', { layout: 'landing' });
 });
 
 // Gig routes
