@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
 const Gig = require('../models/Gig');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 // main gigs route, since we did /gigs in index.js, we can use /
 // get gig list
@@ -73,6 +75,20 @@ router.post('/add', (req, res) => {
       .then(gig => res.redirect('/gigs'))
       .catch(err => console.log(err.message));
   }
+});
+
+// Search for gigs
+router.get('/search', (req, res) => {
+  let { term } = req.query;
+
+  // make lowercase for case sensitive issues
+  term = term.toLowerCase();
+
+  // call find all, use where with it always | returns promise
+  // Select * attribute technologies that begin or end with whatever as long as term value is in it
+  Gig.findAll({ where: { technologies: { [Op.like]: '%' + term + '%' } } })
+    .then(gigs => res.render('gigs', { gigs: gigs }))
+    .catch(err => console.log(err.message));
 });
 
 module.exports = router;
